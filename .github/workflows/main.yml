@@ -1,0 +1,70 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class Max_Price_Add_To_Cart
+{
+	public static void main(String[] args) 
+	{
+		System.setProperty("webdriver.chrome.driver", "C:\\Users\\SP\\workspace\\Selenium_Project\\src\\selenium\\chromedriver.exe");
+		WebDriver driver=new ChromeDriver();
+		
+		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+		
+		driver.get("https://www.saucedemo.com/");
+		
+		driver.manage().window().maximize();
+		
+		driver.findElement(By.id("user-name")).sendKeys("standard_user");
+		driver.findElement(By.id("password")).sendKeys("secret_sauce");
+		driver.findElement(By.id("login-button")).click();
+		
+		List <WebElement> Product_price = (List<WebElement>)driver.findElements(By.xpath("//div[@class=\"inventory_item_description\"]//div[2]//div[1]"));
+		int sizeofwebele = Product_price.size();
+		
+		float max=0;
+		float min=0;
+		int click_add_cart=0;
+		
+		for (int i = 0; i < sizeofwebele; i++)
+		{
+			
+			
+				for (int j=i+1 ;j < sizeofwebele; j++)
+				{
+					StringBuilder a1= new StringBuilder(Product_price.get(i).getText());
+					StringBuilder b1= new StringBuilder(Product_price.get(j).getText());
+					
+					a1.deleteCharAt(0);
+					b1.deleteCharAt(0);
+					
+					String a2=a1.toString();
+					String b2=b1.toString();
+					
+					float a3=Float.parseFloat(a2);
+					float b3=Float.parseFloat(b2);
+					
+					if(a3>b3)
+					{
+					  max=a3;
+					  click_add_cart=i;
+					}
+				
+				}
+				
+		}
+		
+		List <WebElement> li=(List<WebElement>) driver.findElements(By.xpath("//div[@class=\'inventory_item_description\']//div[2]//div[1]//following-sibling::button"));
+		
+		System.out.println("Product which have max price is : "+max);
+		
+		li.get(click_add_cart).click();
+		
+	}	
+}
+
